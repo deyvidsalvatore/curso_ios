@@ -67,22 +67,53 @@ class Livro: Documento {
     }
 }
 
-/* TESTE
-let l1 = Livro()
-l1.anoPublicacao = 1999
-l1.autor = Autor(nome: "J.K Rowling", anoNascimento: 1960)
-l1.titulo = "Harry Potter e a Pedra Filosofal"
-l1.exibirDetalhes()
+protocol LivroDAO {
+    func criar(_ livro: Livro) throws
+    func buscarPorId(_ id: UUID) -> Livro?
+    func buscarTodos() -> [Livro]
+    func atualizar(_ livro: Livro) throws
+    func remover(_ id: UUID)
+}
 
-l1.emprestar()
-l1.emprestar()
-
-l1.devolver()
-l1.devolver() */
+final class LivroDAOImpl : LivroDAO {
+    private var bancoDeDados: [UUID: Livro] = [:]
+    
+    func criar(_ livro: Livro) throws {
+        bancoDeDados[livro.id] = livro
+        print("Livro '\(livro.titulo)' criado com sucesso!")
+    }
+    
+    func buscarPorId(_ id: UUID) -> Livro? {
+        return bancoDeDados[id]
+    }
+    
+    func buscarTodos() -> [Livro] {
+        return Array(bancoDeDados.values)
+    }
+    
+    func atualizar(_ livro: Livro) throws {
+        if bancoDeDados[livro.id] != nil {
+            bancoDeDados[livro.id] = livro
+            print("Livro '\(livro.titulo)' atualizado!")
+        } else {
+            print("Erro: Livro não encontrado para atualização.")
+        }
+    }
+    
+    func remover(_ id: UUID) {
+        if bancoDeDados.removeValue(forKey: id) != nil {
+            print("Livro deletado com sucesso!")
+        } else {
+            print("Erro: Livro não encontrado para remoção com o ID: \(id).")
+        }
+    }
+}
 
 func menuPrincipal() {
     
     var executando = true
+    
+    let livroDAO = LivroDAOImpl()
     
     while executando {
         limparConsole()
@@ -96,7 +127,26 @@ func menuPrincipal() {
                 print("Saindo do programa... Até mais!")
                 executando = false
             case 1:
-                print("TODO: Cadastrando")
+                print("Digite o título do livro: ")
+                let titulo = readLine() ?? ""
+    
+                print("Digite o nome do autor do livro: ")
+                let nomeAutor = readLine() ?? ""
+                
+                print("Digite o ano de nascimento do autor: ")
+                let anoNascimentoAutor = Int(readLine() ?? "") ?? 0
+                
+                print("Digite o ano de publicação do livro: ")
+                let anoPublicacao = Int(readLine() ?? "") ?? 0
+                
+                let novoLivro = Livro()
+                novoLivro.titulo = titulo
+                novoLivro.anoPublicacao = anoPublicacao
+                novoLivro.autor = Autor(nome: nomeAutor, anoNascimento: anoNascimentoAutor)
+                try? livroDAO.criar(novoLivro)
+                
+                
+                
             case 2:
                 print("TODO: Listando")
             case 3:

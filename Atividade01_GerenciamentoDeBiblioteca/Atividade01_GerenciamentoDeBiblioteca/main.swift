@@ -159,10 +159,8 @@ func menuPrincipal() {
                             print("Digite o UUID do livro:")
                             if let idString = readLine(), let uuid = UUID(uuidString: idString) {
                                 if let livroEncontrado = livroDAO.buscarPorId(uuid) {
-                                    print("\nLivro encontrado:")
+                                    print("\nLivro encontrado...")
                                     livroEncontrado.exibirDetalhes()
-                                } else {
-                                    print("Nenhum livro cadastrado com este ID.")
                                 }
                             } else {
                                 print("Formato de UUID inválido!")
@@ -182,7 +180,35 @@ func menuPrincipal() {
                 }
                                 
             case 3:
-                print("TODO: Editar")
+                print("Editando Livro")
+                print("Digite o UUID do livro:")
+                if let idString = readLine(), let uuid = UUID(uuidString: idString) {
+                    if let livroEncontrado = livroDAO.buscarPorId(uuid) {
+                        print("\nLivro encontrado:")
+                        print("Digite o título do livro: ")
+                        let titulo = readLine() ?? ""
+            
+                        print("Digite o nome do autor do livro: ")
+                        let nomeAutor = readLine() ?? ""
+                        
+                        print("Digite o ano de nascimento do autor: ")
+                        let anoNascimentoAutor = Int(readLine() ?? "") ?? 0
+                        
+                        print("Digite o ano de publicação do livro: ")
+                        let anoPublicacao = Int(readLine() ?? "") ?? 0
+                        
+                        livroEncontrado.titulo = titulo
+                        livroEncontrado.anoPublicacao = anoPublicacao
+                        livroEncontrado.autor = Autor(
+                            nome: nomeAutor,
+                            anoNascimento: anoNascimentoAutor
+                        )
+
+                        try? livroDAO.atualizar(livroEncontrado)
+                    } else {
+                        print("Nenhum livro cadastrado com este ID.")
+                    }
+                }
             case 4:
                 print("TODO: Removendo")
             default:

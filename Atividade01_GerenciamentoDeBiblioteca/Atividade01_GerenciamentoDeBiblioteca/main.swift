@@ -55,6 +55,7 @@ class Livro: Documento {
             print("O livro já está emprestado!")
         } else {
             self._isEmprestado = true
+            print("O livro foi emprestado com sucesso.")
         }
     }
     
@@ -63,6 +64,7 @@ class Livro: Documento {
             print("O livro já foi devolvido!")
         } else {
             self._isEmprestado = false
+            print("O livro foi devolvido com sucesso.")
         }
     }
 }
@@ -217,6 +219,48 @@ func menuPrincipal() {
                 } else {
                     print("Formato de UUID inválido!")
                 }
+            case 5:
+                print("Emprestar Livro")
+                print("Digite o UUID do livro:")
+
+                if let idString = readLine(),
+                   let uuid = UUID(uuidString: idString) {
+
+                    if let livroEncontrado = livroDAO.buscarPorId(uuid) {
+                        livroEncontrado.emprestar()
+
+                        try? livroDAO.atualizar(livroEncontrado)
+
+                        print("Operação concluída!")
+                    } else {
+                        print("Livro não encontrado.")
+                    }
+
+                } else {
+                    print("Formato de UUID inválido!")
+                }
+            
+            case 6:
+                print("Devolver Livro")
+                print("Digite o UUID do livro:")
+
+                if let idString = readLine(),
+                   let uuid = UUID(uuidString: idString) {
+
+                    if let livroEncontrado = livroDAO.buscarPorId(uuid) {
+                        livroEncontrado.devolver()
+
+                        try? livroDAO.atualizar(livroEncontrado)
+
+                        print("Operação concluída!")
+                    } else {
+                        print("Livro não encontrado.")
+                    }
+
+                } else {
+                    print("Formato de UUID inválido!")
+                }
+            
             default:
                 print("Opção inválida")
             }
@@ -258,6 +302,8 @@ func exibicaoOpcoesMenu() {
     print("2) Listar/Buscar")
     print("3) Editar")
     print("4) Remover")
+    print("5) Emprestar Livro")
+    print("6) Devolver Livro")
     print("0) Sair do programa")
     print()
 }

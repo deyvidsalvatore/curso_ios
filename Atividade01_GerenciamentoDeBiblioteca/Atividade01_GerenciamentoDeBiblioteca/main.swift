@@ -80,7 +80,7 @@ final class LivroDAOImpl : LivroDAO {
     
     func criar(_ livro: Livro) throws {
         bancoDeDados[livro.id] = livro
-        print("Livro '\(livro.titulo)' criado com sucesso!")
+        print("Livro '\(livro.id)' criado com sucesso!")
     }
     
     func buscarPorId(_ id: UUID) -> Livro? {
@@ -148,7 +148,39 @@ func menuPrincipal() {
                 
                 
             case 2:
-                print("TODO: Listando")
+                print("\n--- SUBMENU BUSCAR/LISTAR ---")
+                print("1) Buscar por ID")
+                print("2) Buscar todos (Listar todos)")
+                print("Escolha uma opção do submenu: ")
+                                
+                if let entradaSub = readLine(), let subOpcao = Int(entradaSub) {
+                    switch subOpcao {
+                        case 1:
+                            print("Digite o UUID do livro:")
+                            if let idString = readLine(), let uuid = UUID(uuidString: idString) {
+                                if let livroEncontrado = livroDAO.buscarPorId(uuid) {
+                                    print("\nLivro encontrado:")
+                                    livroEncontrado.exibirDetalhes()
+                                } else {
+                                    print("Nenhum livro cadastrado com este ID.")
+                                }
+                            } else {
+                                print("Formato de UUID inválido!")
+                            }
+                        case 2:
+                            print("\nListando todos os livros...")
+                            let livros = livroDAO.buscarTodos()
+                            if livros.isEmpty {
+                                print("Nenhum livro cadastrado no sistema.")
+                            } else {
+                                livros.forEach { $0.exibirDetalhes() }
+                            }
+                        default:
+                            print("Opção de submenu inválida.") }
+                } else {
+                        print("Entrada inválida no submenu.")
+                }
+                                
             case 3:
                 print("TODO: Editar")
             case 4:

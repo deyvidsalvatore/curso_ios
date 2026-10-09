@@ -210,7 +210,13 @@ func menuPrincipal() {
                     }
                 }
             case 4:
-                print("TODO: Removendo")
+                print("Remover Livro...")
+                print("Digite o UUID do Livro a ser removido: ")
+                if let idString = readLine(), let uuid = UUID(uuidString: idString) {
+                    livroDAO.remover(uuid)
+                } else {
+                    print("Formato de UUID inválido!")
+                }
             default:
                 print("Opção inválida")
             }

@@ -39,7 +39,28 @@ struct ContentView: View {
     
     
     var body: some View {
-        
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    
+                    
+                    // Header
+                    VStack(spacing: 10) {
+                        Image(systemName: "graduationcap.fill")
+                            .font(.system(size: 50))
+                            .foregroundStyle(.orange)
+                        
+                        Text("Minha turma")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        Text("Cadastre alunos e acompanhe os resultados.")
+                            .foregroundStyle(.gray)
+                            .font(.headline)
+                    }.frame(maxWidth: .infinity)
+                }
+            }
+        }
     }
 }
 

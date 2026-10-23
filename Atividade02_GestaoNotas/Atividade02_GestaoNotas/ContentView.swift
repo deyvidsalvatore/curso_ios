@@ -57,6 +57,8 @@ struct ContentView: View {
                             .font(.headline)
                     }
                     .frame(maxWidth: .infinity)
+                    
+                    Divider()
 
                     // Cadastro
                     Text("Cadastro Aluno")
@@ -88,6 +90,36 @@ struct ContentView: View {
                         .background(Color.orange)
                         .foregroundColor(.white)
                         .cornerRadius(12)
+                    }
+                    
+                    Divider()
+                    
+                    // Resumo
+                    Text("Resumo da turma")
+                        .font(.title2)
+                        .fontWeight(.bold)
+
+                    HStack {
+                        resumoCard(
+                            titulo: "Alunos",
+                            valor: totalAlunos,
+                            cor: .blue,
+                            icone: "person.3.fill"
+                        )
+
+                        resumoCard(
+                            titulo: "Aprovados",
+                            valor: aprovados,
+                            cor: .green,
+                            icone: "checkmark.circle.fill"
+                        )
+
+                        resumoCard(
+                            titulo: "Reprovados",
+                            valor: reprovados,
+                            cor: .red,
+                            icone: "xmark.circle.fill"
+                        )
                     }
                 }
                 .padding()
@@ -138,6 +170,31 @@ struct ContentView: View {
         mensagemAlerta = mensagem
         mostrarAlerta = true
     }
+    
+    @ViewBuilder
+    func resumoCard(
+            titulo: String,
+            valor: Int,
+            cor: Color,
+            icone: String
+    ) -> some View {
+
+            VStack(spacing: 10) {
+
+                Image(systemName: icone)
+                    .font(.title)
+                    .foregroundColor(cor)
+
+                Text("\(valor)")
+                    .font(.title)
+                    .fontWeight(.bold)
+
+                Text(titulo)
+                    .foregroundColor(.gray)
+            }
+            .frame(maxWidth: .infinity)
+    }
+    
 }
 
 #Preview {

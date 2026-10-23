@@ -1,7 +1,6 @@
 import SwiftUI
 
-
-struct Aluno : Identifiable {
+struct Aluno: Identifiable {
     let id = UUID()
     let nome: String
     let nota1: Double
@@ -19,13 +18,14 @@ struct Aluno : Identifiable {
 struct ContentView: View {
     
     @State private var nome = ""
-    @State private var nota1 = ""
-    @State private var nota2 = ""
+    @State private var nota1: Double? = nil
+    @State private var nota2: Double? = nil
     
     @State private var alunos: [Aluno] = []
-    
-    @State private var mensagemErro = ""
-    @State private var mostrarErro = false
+
+    @State private var tituloAlerta = ""
+    @State private var mensagemAlerta = ""
+    @State private var mostrarAlerta = false
     
     var totalAlunos: Int { alunos.count }
     
@@ -37,12 +37,10 @@ struct ContentView: View {
         alunos.filter { $0.media < 7.0 }.count
     }
     
-    
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    
                     
                     // Header
                     VStack(spacing: 10) {
@@ -57,10 +55,88 @@ struct ContentView: View {
                         Text("Cadastre alunos e acompanhe os resultados.")
                             .foregroundStyle(.gray)
                             .font(.headline)
-                    }.frame(maxWidth: .infinity)
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    // Cadastro
+                    Text("Cadastro Aluno")
+                        .font(.system(size: 24))
+                        .fontWeight(.bold)
+                    
+                    TextField("Digite o nome do aluno", text: $nome)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 18))
+                    
+                    TextField("Nota 1", value: $nota1, format: .number)
+                        .keyboardType(.decimalPad)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 18))
+                    
+                    TextField("Nota 2", value: $nota2, format: .number)
+                        .keyboardType(.decimalPad)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 18))
+                    
+                    Button(action: cadastrarAluno) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Cadastrar aluno")
+                                .fontWeight(.bold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.orange)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
                 }
+                .padding()
             }
+            .navigationBarTitleDisplayMode(.inline)
         }
+
+        .alert(tituloAlerta, isPresented: $mostrarAlerta) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(mensagemAlerta)
+        }
+    }
+    
+    func cadastrarAluno() -> Void {
+        guard !nome.trimmingCharacters(in: .whitespaces).isEmpty else {
+            exibirAlerta(titulo: "Erro", mensagem: "Informe o nome do aluno.")
+            return
+        }
+
+        guard let n1 = nota1, let n2 = nota2 else {
+            exibirAlerta(titulo: "Erro", mensagem: "Digite notas válidas.")
+            return
+        }
+
+        guard (0...10).contains(n1), (0...10).contains(n2) else {
+            exibirAlerta(titulo: "Erro", mensagem: "As notas devem estar entre 0 e 10.")
+            return
+        }
+
+        let novoAluno = Aluno(
+            nome: nome,
+            nota1: n1,
+            nota2: n2
+        )
+
+        alunos.append(novoAluno)
+        
+        exibirAlerta(titulo: "Sucesso!", mensagem: "O aluno \(nome) foi adicionado com sucesso.")
+
+        nome = ""
+        nota1 = nil
+        nota2 = nil
+    }
+    
+    func exibirAlerta(titulo: String, mensagem: String) -> Void {
+        tituloAlerta = titulo
+        mensagemAlerta = mensagem
+        mostrarAlerta = true
     }
 }
 

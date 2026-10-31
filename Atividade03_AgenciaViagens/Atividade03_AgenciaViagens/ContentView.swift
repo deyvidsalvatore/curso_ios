@@ -12,6 +12,102 @@ struct PacoteViagem: Identifiable {
     let preco: Double
 }
 
+struct DetalheView: View {
+    let pacote: PacoteViagem
+    
+    @Binding var favoritos: [UUID]
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                
+                Image(systemName: pacote.imagemNome)
+                    .font(.system(size: 120))
+                    .foregroundColor(.blue)
+                
+                Text(pacote.local)
+                    .foregroundStyle(.blue)
+                
+                Text(pacote.titulo)
+                    .font(.largeTitle)
+                    .bold()
+                
+                HStack {
+                    VStack {
+                        Text("Partida")
+                        Text(pacote.dataPartida)
+                            .bold()
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Text("Duração")
+                        Text("\(pacote.diarias) dias")
+                            .bold()
+                    }
+                    
+                    Spacer()
+                    
+                    
+                    VStack {
+                        Text("Retorno")
+                        Text(pacote.dataChegada)
+                            .bold()
+                    }
+                }
+                
+                Divider()
+                
+                VStack(alignment: .leading) {
+                    Text("Hospedagem")
+                        .font(.title2)
+                        .bold()
+                    
+                    Text(
+                        pacote.informacoesHotel
+                    )
+                }
+                
+                Button {
+                    if favoritos.contains(pacote.id) {
+                        favoritos.removeAll {
+                            $0 == pacote.id
+                        }
+                    } else {
+                        favoritos.append(pacote.id)
+                    }
+                } label: {
+                    Label(
+                        favoritos.contains(pacote.id)
+                        ? "Remover Favorito"
+                        : "Adicionar Favorito",
+                        systemImage:
+                            favoritos.contains(pacote.id)
+                        ? "heart.fill"
+                        : "heart"
+                    )
+                }
+                
+                Button {
+                    
+                } label: {
+                    Text(
+                        "Reservar por \(pacote.preco.formatted(.currency(code: "BRL")))"
+                    )
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(15)
+                }
+            }
+            .padding()
+        }
+        .navigationTitle("Detalhes")
+    }
+}
+
 struct ContentView: View {
     let pacotes = [
         PacoteViagem(
@@ -71,17 +167,93 @@ struct ContentView: View {
 
     ]
     
+    @State private var favoritos: [UUID] = []
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+
+        NavigationStack {
+
+            List(pacotes) { pacote in
+
+                NavigationLink {
+
+                    DetalheView(
+                        pacote: pacote,
+                        favoritos: $favoritos
+                    )
+
+                } label: {
+
+                    HStack {
+
+                        Image(systemName: pacote.imagemNome)
+                            .font(.system(size: 50))
+                            .foregroundColor(.blue)
+                            .frame(width: 80)
+
+                        VStack(alignment: .leading) {
+
+                            Text(pacote.titulo)
+                                .font(.headline)
+
+                            Text(pacote.local)
+                                .foregroundColor(.gray)
+
+                            Text("\(pacote.diarias) diárias")
+                                .foregroundColor(.blue)
+
+                            Text(
+                                pacote.preco,
+                                format: .currency(code: "BRL")
+                            )
+                            .foregroundColor(.green)
+                        }
+
+                        Spacer()
+
+                        Button {
+
+                            if favoritos.contains(pacote.id) {
+                                favoritos.removeAll {
+                                    $0 == pacote.id
+                                }
+                            } else {
+                                favoritos.append(pacote.id)
+                            }
+
+                        } label: {
+
+                            Image(
+                                systemName:
+                                    favoritos.contains(pacote.id)
+                                ? "heart.fill"
+                                : "heart"
+                            )
+                            .foregroundColor(.red)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Explorar Viagens")
+            .toolbar {
+
+                NavigationLink {
+
+                    
+
+                } label: {
+
+                    Label(
+                        "\(favoritos.count)",
+                        systemImage: "heart.fill"
+                    )
+                }
+            }
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
 }
+

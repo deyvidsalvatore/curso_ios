@@ -108,6 +108,82 @@ struct DetalheView: View {
     }
 }
 
+struct FavoritosView: View {
+    let pacotes: [PacoteViagem]
+    @Binding var favoritos: [UUID]
+
+    var pacotesFavoritos: [PacoteViagem] {
+        pacotes.filter { favoritos.contains($0.id) }
+    }
+
+    var body: some View {
+
+        if pacotesFavoritos.isEmpty {
+
+            VStack {
+
+                Spacer()
+
+                Image(systemName: "heart.slash")
+                    .font(.system(size: 60))
+
+                Text("Nenhum pacote favoritado")
+                    .font(.title3)
+
+                Spacer()
+            }
+            .navigationTitle("Meus Favoritos")
+
+        } else {
+
+            List(pacotesFavoritos) { pacote in
+
+                NavigationLink {
+
+                    DetalheView(
+                        pacote: pacote,
+                        favoritos: .constant(favoritos)
+                    )
+
+                } label: {
+
+                    HStack(spacing: 15) {
+
+                        Image(systemName: pacote.imagemNome)
+                            .font(.system(size: 40))
+                            .frame(width: 80)
+
+                        VStack(alignment: .leading, spacing: 5) {
+
+                            Text(pacote.titulo)
+                                .font(.headline)
+
+                            Text(pacote.local)
+                                .foregroundColor(.gray)
+
+                            Text("\(pacote.diarias) diárias")
+                                .foregroundColor(.blue)
+
+                            Text(
+                                pacote.preco,
+                                format: .currency(code: "BRL")
+                            )
+                            .foregroundColor(.green)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(.red)
+                    }
+                    .padding(.vertical, 8)
+                }
+            }
+            .navigationTitle("Meus Favoritos")
+        }
+    }
+}
+
 struct ContentView: View {
     let pacotes = [
         PacoteViagem(
@@ -186,10 +262,11 @@ struct ContentView: View {
 
                     HStack {
 
-                        Image(systemName: pacote.imagemNome)
-                            .font(.system(size: 50))
-                            .foregroundColor(.blue)
-                            .frame(width: 80)
+                        Image(pacote.imagemNome)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
 
                         VStack(alignment: .leading) {
 
@@ -238,8 +315,11 @@ struct ContentView: View {
             .toolbar {
 
                 NavigationLink {
-
-                    
+                    FavoritosView(
+                        pacotes: pacotes,
+                        favoritos: $favoritos
+                    )
+                
 
                 } label: {
 

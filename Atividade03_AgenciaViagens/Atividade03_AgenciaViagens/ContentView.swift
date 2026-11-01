@@ -21,9 +21,12 @@ struct DetalheView: View {
         ScrollView {
             VStack(spacing: 20) {
                 
-                Image(systemName: pacote.imagemNome)
-                    .font(.system(size: 120))
-                    .foregroundColor(.blue)
+                Image(pacote.imagemNome)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 250)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
                 
                 Text(pacote.local)
                     .foregroundStyle(.blue)
@@ -149,9 +152,11 @@ struct FavoritosView: View {
 
                     HStack(spacing: 15) {
 
-                        Image(systemName: pacote.imagemNome)
-                            .font(.system(size: 40))
-                            .frame(width: 80)
+                        Image(pacote.imagemNome)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
 
                         VStack(alignment: .leading, spacing: 5) {
 
@@ -193,7 +198,7 @@ struct ContentView: View {
             dataPartida: "10/01/2027",
             dataChegada: "17/01/2027",
             informacoesHotel: "Resort pé de areia com café da manhã incluso.",
-            imagemNome: "sun.max.fill",
+            imagemNome: "porto_de_galinhas",
             preco: 2899
         ),
         
@@ -204,7 +209,7 @@ struct ContentView: View {
                 dataPartida: "05/02/2027",
                 dataChegada: "10/02/2027",
                 informacoesHotel: "Hotel 4 estrelas próximo às piscinas naturais.",
-                imagemNome: "water.waves",
+                imagemNome: "maragogi",
                 preco: 2599
         ),
         
@@ -215,7 +220,7 @@ struct ContentView: View {
             dataPartida: "15/03/2027",
             dataChegada: "19/03/2027",
             informacoesHotel: "Hospedagem no Recife Antigo.",
-            imagemNome: "building.columns.fill",
+            imagemNome: "recife_antigo",
             preco: 1899
         ),
 
@@ -226,7 +231,7 @@ struct ContentView: View {
             dataPartida: "20/04/2027",
             dataChegada: "26/04/2027",
             informacoesHotel: "Hotel frente mar na Pajuçara.",
-            imagemNome: "beach.umbrella.fill",
+            imagemNome: "maceio_pajucara",
             preco: 2799
         ),
         
@@ -237,7 +242,7 @@ struct ContentView: View {
             dataPartida: "10/05/2027",
             dataChegada: "15/05/2027",
             informacoesHotel: "Pousada ecológica premium.",
-            imagemNome: "tropicalstorm",
+            imagemNome: "fernando_de_noronha",
             preco: 4999
         )
 

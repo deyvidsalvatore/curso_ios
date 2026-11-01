@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "porto_de_galinhas.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

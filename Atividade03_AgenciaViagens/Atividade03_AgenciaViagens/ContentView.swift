@@ -23,9 +23,10 @@ struct DetalheView: View {
                 
                 Image(pacote.imagemNome)
                     .resizable()
-                    .scaledToFill()
+                    .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 250)
+                    .frame(height: 220)
+                    .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                 
                 Text(pacote.local)
@@ -62,15 +63,16 @@ struct DetalheView: View {
                 
                 Divider()
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Hospedagem")
                         .font(.title2)
                         .bold()
-                    
-                    Text(
-                        pacote.informacoesHotel
-                    )
+
+                    Text(pacote.informacoesHotel)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     if favoritos.contains(pacote.id) {
@@ -105,7 +107,8 @@ struct DetalheView: View {
                     .cornerRadius(15)
                 }
             }
-            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
         }
         .navigationTitle("Detalhes")
     }

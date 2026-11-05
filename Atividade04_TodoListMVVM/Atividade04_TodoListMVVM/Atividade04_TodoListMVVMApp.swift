@@ -11,7 +11,7 @@ import SwiftUI
 struct Atividade04_TodoListMVVMApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TarefaView()
         }
     }
 }
